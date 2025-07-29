@@ -1,0 +1,18 @@
+# MCP Memory Server Dependencies
+
+# FastMCP - MCPサーバフレームワーク
+fastmcp>=0.1.0
+
+# Standard library modules used (built-in, no installation required):
+# - json: JSONファイル操作
+# - os: ファイルパス操作
+# - uuid: ユニークID生成
+# - datetime: タイムスタンプ管理
+# - typing: 型ヒント
+# - asyncio: 非同期処理
+
+# Optional development dependencies (uncomment if needed):
+# pytest>=7.0.0          # テスト実行
+# black>=22.0.0           # コードフォーマッター
+# mypy>=1.0.0             # 型チェック
+# flake8>=5.0.0           # リンター
