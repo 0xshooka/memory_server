@@ -18,6 +18,7 @@ Memory Serverは、AIアシスタントが会話の内容や重要な情報を�
 - 🔗 **関連付け**: メモ同士を関連付けて記憶の連鎖を作成
 
 ## ディレクトリ構造
+```
 memory-server
 ├── README.md
 ├── server.py # 文字列のパースや入出力などを行います
@@ -25,6 +26,7 @@ memory-server
 ├── LICENSE
 ├── pyproject.toml # Poertryやuvを使う方はこちらを使用してください
 └── requirements.txt
+```
 
 ## 使用するパッケージ
 
@@ -72,7 +74,7 @@ Claude Desktopを使用する場合は`claude_desktop_config.json`を編集し�
 # LLMによる使用例
 
 ## 新しいメモを作成
-
+```
 create_new_memo(
     content="今日のユーザーはコードレビューを頑張ったらしい！お疲れ様！",
     tags=["code review", "dairy"],
@@ -80,11 +82,11 @@ create_new_memo(
     emotion="cheer",
     context="work"
 )
-
+```
 ## メモを検索
-
+```
 results = search_memo_content(query="コードレビュー")
-
+```
 ## ライセンス
 
 MIT Licenseの下でリリースされています。
