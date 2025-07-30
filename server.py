@@ -33,7 +33,7 @@ def create_new_memo(
     
     Args:
         content: メモの内容
-        tags: タグのリスト（オプション）
+        tags_str: リスト形式のタグ。リストの項目はstr型（オプション）
         importance: 重要度 1-5（重要度が大きいほど数字が大きくなる。デフォルトは1）
         emotion: 感情（オプション）
         context: 会話の文脈（オプション）
@@ -42,7 +42,11 @@ def create_new_memo(
         作成されたメモの情報
     """
     try:
-        tags = json.loads(tags_str)
+        # タグの処理（カンマ区切りの文字列を想定）
+        tags = None
+        if tags_str and tags_str.strip():
+            tags = [tag.strip() for tag in tags_str.split(',') if tag.strip()]
+        
         memo = create_memo(
             content=content,
             tags=tags or [],
@@ -64,24 +68,33 @@ def create_new_memo(
 
 @mcp.tool()
 def get_memos(
-    limit: Optional[int] = None,
-    tags: Optional[List[str]] = None,
-    importance_min: Optional[int] = None,
+    limit_str: Optional[str] = None,
+    tags_str: Optional[str] = None,
+    importance_min_str: Optional[str] = None,
     context: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     メモを取得する（フィルタリング可能）
     
     Args:
-        limit: 取得件数の上限
-        tags: 指定されたタグを含むメモのみ取得
-        importance_min: 指定された重要度以上のメモのみ取得
+        limit_str: 取得件数の上限(int型で入力)
+        tags_str: 指定されたタグを含むメモのみ取得
+        importance_min_str: 指定された重要度以上のメモのみ取得(重要度は1から5のint型で入力)
         context: 指定された文脈のメモのみ取得
     
     Returns:
         メモのリスト
     """
     try:
+        # 安全な型変換
+        limit = int(limit_str) if limit_str and limit_str.strip() else None
+        importance_min = int(importance_min_str) if importance_min_str and importance_min_str.strip() else None
+        
+        # タグの処理（カンマ区切りの文字列を想定）
+        tags = None
+        if tags_str and tags_str.strip():
+            tags = [tag.strip() for tag in tags_str.split(',') if tag.strip()]
+
         memos = get_all_memos()
         
         # フィルタリング
@@ -150,10 +163,10 @@ def update_existing_memo(
     memo_id: str,
     content: Optional[str] = None,
     tags_str: Optional[str] = None,
-    importance: Optional[int] = None,
+    importance_str: Optional[str] = None,
     emotion: Optional[str] = None,
     context: Optional[str] = None,
-    related_to: Optional[List[str]] = None
+    related_to_str: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     既存のメモを更新する
@@ -161,17 +174,28 @@ def update_existing_memo(
     Args:
         memo_id: 更新するメモのID
         content: 新しいメモの内容
-        tags_str: 新しいタグのリスト(List構造をstr形式で渡す)
-        importance: 新しい重要度 1-5
+        tags_str: 新しいタグのリスト(list構造をstr形式で渡す)
+        importance:_str 新しい重要度 1-5
         emotion: 新しい感情
         context: 新しい文脈
-        related_to: 関連するメモのIDリスト
+        related_to_str: 関連するメモのIDリスト(list構造をstr形式で渡す)
     
     Returns:
         更新されたメモの情報
     """
     try:
-        tags = json.loads(tags_str)
+        # 安全な型変換
+        importance = int(importance_str) if importance_str and importance_str.strip() else None
+        
+        # タグの処理（カンマ区切りの文字列を想定）
+        tags = None
+        if tags_str and tags_str.strip():
+            tags = [tag.strip() for tag in tags_str.split(',') if tag.strip()]
+
+        relations = None
+        if related_to_str and related_to_str.strip():
+            relations = [relation.strip() for relation in related_to_str.split(',') if relation.strip()]
+
         # 重要度の範囲チェック
         if importance is not None:
             importance = max(1, min(5, importance))
@@ -183,7 +207,7 @@ def update_existing_memo(
             importance=importance,
             emotion=emotion,
             context=context,
-            related_to=related_to
+            related_to=relations
         )
         
         if memo:
@@ -237,19 +261,21 @@ def delete_existing_memo(memo_id: str) -> Dict[str, Any]:
 @mcp.tool()
 def search_memo_content(
     query: str,
-    limit: Optional[int] = 10
+    limit_num: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     メモの内容を検索する
     
     Args:
         query: 検索クエリ
-        limit: 取得件数の上限
+        limit_num: 取得件数の上限
     
     Returns:
         検索結果のメモリスト
     """
     try:
+        limit = int(limit_num) if limit_num and limit_num.strip() else 10
+
         memos = search_memos(query, limit)
         return {
             "success": True,
