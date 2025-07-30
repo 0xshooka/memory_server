@@ -77,10 +77,10 @@ Claude Desktopを使用する場合は`claude_desktop_config.json`を編集し�
 ```
 create_new_memo(
     content="今日のユーザーはコードレビューを頑張ったらしい！お疲れ様！",
-    tags=["code review", "dairy"],
+    tags=["コードレビュー", "日常"],
     importance=3,
-    emotion="cheer",
-    context="work"
+    emotion="励まし",
+    context="お仕事"
 )
 ```
 ## メモを検索
